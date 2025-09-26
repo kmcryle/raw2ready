@@ -1,1 +1,4 @@
-# raw2ready
+streamlit
+numpy
+pandas
+difflib
