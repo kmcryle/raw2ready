@@ -8,6 +8,10 @@ from datetime import datetime
 import re
 import difflib
 import time
+import toml
+
+# Load config.toml
+config = toml.load(".streamlit/config.toml")
 
 st.set_page_config(page_title="Raw to Ready", page_icon="🧹", layout="wide",)
 
