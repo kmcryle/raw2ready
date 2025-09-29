@@ -350,12 +350,12 @@ if uploaded_file:
                         "Replace with mean",
                         "Replace with median",
                         "Download anomalies separately"
-                    ]
+                    ],
                     help="""
                     Flags anomalies but keeps the dataset unchanged.  
                     Removes rows that contain anomalies.  
+                    Replaces anomalies with the mean value of the column.
                     Replaces anomalies with the median value of the column.  
-                    Replaces anomalies with the mean value of the column.  
                     Saves anomalies into a separate CSV file.
                     """
                 )
