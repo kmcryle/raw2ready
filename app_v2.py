@@ -203,7 +203,7 @@ if uploaded_file:
                     help="Flags unusual numeric values using statistical detection. Useful for spotting outliers (extreme values).")
 
     
-    # Tabs for Raw vs Cleaned data
+    # Tabs for Raw, Cleaned, and Anomlies
     with tab1:
         st.dataframe(df.head(10))
 
@@ -330,8 +330,14 @@ if uploaded_file:
         with tab2:
             st.dataframe(df_cleaned.head(10))
 
+            anomalies = detect_anomalies(df_cleaned)
+            st.session_state["anomalies"] = anomalies
+
         with tab3:
-            if "anomalies" in locals() and not anomalies.empty:
+            anomalies = st.session_state.get("anomalies", pd.DataFrame())
+            rows_with_anomalies = 0 # default
+            
+            if not anomalies.empty:
                 rows_with_anomalies = anomalies.index.nunique()
                 st.warning(f"{rows_with_anomalies} rows contain anomalies ⚠️")
                 st.dataframe(anomalies)
@@ -342,11 +348,11 @@ if uploaded_file:
                     st.session_state["anomaly_action"] = "Just flag them (default)"
                     
                 options = {
-                    "Just flag them (default)": "⚑ Flags anomalies but keeps the dataset unchanged.",
-                    "Remove rows": "🗑️ Removes rows that contain anomalies.",
-                    "Replace with mean": "➗ Replaces anomalies with the column mean.",
-                    "Replace with median": "📊 Replaces anomalies with the column median.",
-                    "Download anomalies separately": "💾 Saves anomalies into a separate CSV file."
+                    "Just flag them (default)": "Flags anomalies but keeps the dataset unchanged.",
+                    "Remove rows": "Removes rows that contain anomalies.",
+                    "Replace with mean": "Replaces anomalies with the column mean.",
+                    "Replace with median": "Replaces anomalies with the column median.",
+                    "Download anomalies separately": "Saves anomalies into a separate CSV file."
                 }
 
                 for opt, help_text in options.items():
@@ -374,7 +380,7 @@ if uploaded_file:
                     st.success("Anomalous values replaced with mean.")
                 elif action == "Download anomalies separately":
                     csv_anomalies = anomalies.to_csv(index=False).encode("utf-8")
-                    st.download_button("📥 Download Anomalies CSV", csv_anomalies, "anomalies.csv", "text/csv")
+                    st.download_button("Download Anomalies CSV", csv_anomalies, "anomalies.csv", "text/csv")
                 else:
                     st.info("Anomalies are flagged but dataset remains unchanged.")
             else:
