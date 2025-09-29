@@ -331,24 +331,23 @@ if uploaded_file:
             st.dataframe(df_cleaned.head(10))
 
         with tab3:
-            with tab3:
-                if "anomalies" in locals() and not anomalies.empty:
-                    rows_with_anomalies = anomalies.index.nunique()
-                    st.warning(f"{rows_with_anomalies} rows contain anomalies ⚠️")
-                    st.dataframe(anomalies)
+            if "anomalies" in locals() and not anomalies.empty:
+                rows_with_anomalies = anomalies.index.nunique()
+                st.warning(f"{rows_with_anomalies} rows contain anomalies ⚠️")
+                st.dataframe(anomalies)
 
-                    st.markdown("### What would you like to do with anomalies?")
-                    st.caption("""
-                    Anomalies are unusual values that may be errors, rare events, or important signals.  
-                    Below are the options and what they mean:
-                    - **Just flag them (default)** → Keep dataset unchanged, only highlight anomalies.  
-                    - **Remove anomalous rows** → Delete rows with anomalies. Good if they’re clearly errors.  
-                    - **Replace with median** → Swap anomalies with the middle value of the column.  
-                    - **Replace with mean** → Swap anomalies with the average value of the column.  
-                    - **Download anomalies separately** → Save anomalies into a separate CSV for later review.  
-                    """)
+                st.markdown("### What would you like to do with anomalies?")
+                st.caption("""
+                Anomalies are unusual values that may be errors, rare events, or important signals.  
+                Below are the options and what they mean:
+                - **Just flag them (default)** → Keep dataset unchanged, only highlight anomalies.  
+                - **Remove anomalous rows** → Delete rows with anomalies. Good if they’re clearly errors.  
+                - **Replace with median** → Swap anomalies with the middle value of the column.  
+                - **Replace with mean** → Swap anomalies with the average value of the column.  
+                - **Download anomalies separately** → Save anomalies into a separate CSV for later review.  
+                """)
 
-                    action = st.radio(
+                action = st.radio(
                     "Choose an action:",
                     [
                         "Just flag them (default)",
