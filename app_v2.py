@@ -335,32 +335,31 @@ if uploaded_file:
                 rows_with_anomalies = anomalies.index.nunique()
                 st.warning(f"{rows_with_anomalies} rows contain anomalies ⚠️")
                 st.dataframe(anomalies)
-
                 st.markdown("### What would you like to do with the anomalies?")
-                st.caption("""
-                Anomalies are unusual values that may be errors, rare events, or important signals.  
-                Below are the options you can choose:
-                """)
+                st.caption("Anomalies are unusual values that may be errors, rare events, or important signals.")
+                
+                if "anomaly_action" not in st.session_state:
+                    st.session_state["anomaly_action"] = "Just flag them (default)"
+                    
+                options = {
+                    "Just flag them (default)": "⚑ Flags anomalies but keeps the dataset unchanged.",
+                    "Remove rows": "🗑️ Removes rows that contain anomalies.",
+                    "Replace with mean": "➗ Replaces anomalies with the column mean.",
+                    "Replace with median": "📊 Replaces anomalies with the column median.",
+                    "Download anomalies separately": "💾 Saves anomalies into a separate CSV file."
+                }
 
-                action = st.radio(
-                    "Choose an action:",
-                    [
-                        "Just flag them (default)",
-                        "Remove rows",
-                        "Replace with mean",
-                        "Replace with median",
-                        "Download anomalies separately"
-                    ],
-                    help="""
-                    Flags anomalies but keeps the dataset unchanged.  
-                    Removes rows that contain anomalies.  
-                    Replaces anomalies with the mean value of the column.
-                    Replaces anomalies with the median value of the column.  
-                    Saves anomalies into a separate CSV file.
-                    """
-                )
+                for opt, help_text in options.items():
+                    if st.checkbox(opt, key=f"opt_{opt}", help=help_text, 
+                                   value=(st.session_state["anomaly_action"] == opt)):
+                        st.session_state["anomaly_action"] = opt
+                        for other in options.keys():
+                            if other != opt:
+                                st.session_state[f"opt_{other}"] = False
 
-                if action == "Remove anomalous rows":
+                action = st.session_state["anomaly_action"]
+                
+                if action == "Remove rows":
                     df_cleaned = df_cleaned.drop(anomalies.index)
                     st.success("Anomalous rows have been removed from the cleaned dataset.")
                 elif action == "Replace with median":
@@ -381,7 +380,7 @@ if uploaded_file:
             else:
                 rows_with_anomalies = 0
                 st.success("No anomalies detected ✅")
-                
+
         # Save cleaned stats
         rows_after = int(len(df_cleaned))
         nulls_after = int(df_cleaned.isnull().sum().sum())
