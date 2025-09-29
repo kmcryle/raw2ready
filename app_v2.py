@@ -336,26 +336,28 @@ if uploaded_file:
                 st.warning(f"{rows_with_anomalies} rows contain anomalies ⚠️")
                 st.dataframe(anomalies)
 
-                st.markdown("### What would you like to do with anomalies?")
+                st.markdown("### What would you like to do with the anomalies?")
                 st.caption("""
                 Anomalies are unusual values that may be errors, rare events, or important signals.  
-                Below are the options and what they mean:
-                - **Just flag them (default)** → Keep dataset unchanged, only highlight anomalies.  
-                - **Remove anomalous rows** → Delete rows with anomalies. Good if they’re clearly errors.  
-                - **Replace with median** → Swap anomalies with the middle value of the column.  
-                - **Replace with mean** → Swap anomalies with the average value of the column.  
-                - **Download anomalies separately** → Save anomalies into a separate CSV for later review.  
+                Below are the options you can choose:
                 """)
 
                 action = st.radio(
                     "Choose an action:",
                     [
                         "Just flag them (default)",
-                        "Remove anomalous rows",
-                        "Replace with median",
+                        "Remove rows",
                         "Replace with mean",
+                        "Replace with median",
                         "Download anomalies separately"
                     ]
+                    help="""
+                    Flags anomalies but keeps the dataset unchanged.  
+                    Removes rows that contain anomalies.  
+                    Replaces anomalies with the median value of the column.  
+                    Replaces anomalies with the mean value of the column.  
+                    Saves anomalies into a separate CSV file.
+                    """
                 )
 
                 if action == "Remove anomalous rows":
