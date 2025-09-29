@@ -331,14 +331,56 @@ if uploaded_file:
             st.dataframe(df_cleaned.head(10))
 
         with tab3:
-            if "anomalies" in locals() and not anomalies.empty:
-                rows_with_anomalies = anomalies.index.nunique()
-                st.warning(f"{rows_with_anomalies} rows contain anomalies ⚠️")
-                st.dataframe(anomalies)
+            with tab3:
+                if "anomalies" in locals() and not anomalies.empty:
+                    rows_with_anomalies = anomalies.index.nunique()
+                    st.warning(f"{rows_with_anomalies} rows contain anomalies ⚠️")
+                    st.dataframe(anomalies)
+
+                    st.markdown("### What would you like to do with anomalies?")
+                    st.caption("""
+                    Anomalies are unusual values that may be errors, rare events, or important signals.  
+                    Below are the options and what they mean:
+                    - **Just flag them (default)** → Keep dataset unchanged, only highlight anomalies.  
+                    - **Remove anomalous rows** → Delete rows with anomalies. Good if they’re clearly errors.  
+                    - **Replace with median** → Swap anomalies with the middle value of the column.  
+                    - **Replace with mean** → Swap anomalies with the average value of the column.  
+                    - **Download anomalies separately** → Save anomalies into a separate CSV for later review.  
+                    """)
+
+                    action = st.radio(
+                    "Choose an action:",
+                    [
+                        "Just flag them (default)",
+                        "Remove anomalous rows",
+                        "Replace with median",
+                        "Replace with mean",
+                        "Download anomalies separately"
+                    ]
+                )
+
+                if action == "Remove anomalous rows":
+                    df_cleaned = df_cleaned.drop(anomalies.index)
+                    st.success("Anomalous rows have been removed from the cleaned dataset.")
+                elif action == "Replace with median":
+                    for col in anomalies["Anomaly_Column"].unique():
+                        median_val = df_cleaned[col].median()
+                        df_cleaned.loc[anomalies.index, col] = median_val
+                    st.success("Anomalous values replaced with median.")
+                elif action == "Replace with mean":
+                    for col in anomalies["Anomaly_Column"].unique():
+                        mean_val = df_cleaned[col].mean()
+                        df_cleaned.loc[anomalies.index, col] = mean_val
+                    st.success("Anomalous values replaced with mean.")
+                elif action == "Download anomalies separately":
+                    csv_anomalies = anomalies.to_csv(index=False).encode("utf-8")
+                    st.download_button("📥 Download Anomalies CSV", csv_anomalies, "anomalies.csv", "text/csv")
+                else:
+                    st.info("Anomalies are flagged but dataset remains unchanged.")
             else:
                 rows_with_anomalies = 0
                 st.success("No anomalies detected ✅")
-
+                
         # Save cleaned stats
         rows_after = int(len(df_cleaned))
         nulls_after = int(df_cleaned.isnull().sum().sum())
