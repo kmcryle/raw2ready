@@ -72,7 +72,7 @@ def normalize_text(series, col_name=""):
 def validate_emails(series):
     return series.apply(lambda x: x if re.match(r"[^@]+@[^@]+\.[^@]+", str(x)) else "invalid@example.com")
 
-def fill_missing(df, method="N/A"):
+def fill_missing(df, method="Fill with N/A"):
     df_copy = df.copy()
     for col in df_copy.columns:
         if df_copy[col].isnull().sum() > 0:
@@ -126,7 +126,7 @@ def reset_cleaning_options():
     st.session_state["do_validate_emails"] = False
     st.session_state["do_fuzzy_standardize"] = False
     st.session_state["do_anomaly_detection"] = False
-    st.session_state["fill_method"] = "N/A"
+    st.session_state["fill_method"] = "Fill with N/A"
     st.session_state["cleaned_ready"] = False
 
 # ---------------------------
