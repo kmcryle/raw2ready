@@ -335,6 +335,23 @@ if uploaded_file:
                 rows_with_anomalies = anomalies.index.nunique()
                 st.warning(f"{rows_with_anomalies} rows contain anomalies ⚠️")
                 st.dataframe(anomalies)
+                
+                # Recommendation for Anomalies
+                st.markdown("### Recommendations for Handling Anomalies")
+                st.markdown("""
+                Anomalies are values in the dataset that are very different from the rest.
+                They can occur naturally such as rare but valid high values or from errors like incrorrect data entry or wrong units.
+                
+                ### How to Handle Anomalies
+                These are suggested actions, but the final decision depends on the context of your dataset and your goals:
+                1. Review the flagged rows to understand why they appear unusual.  
+                2. Compare them with reliable references or source data.  
+                3. Possible actions:  
+                    - Keep them if they are valid rare cases.  
+                    - Correct them if they are clear errors.  
+                    - Remove them if they are invalid and distort analysis.  
+                4. Document your decision so the cleaning process remains consistent and transparent.  
+                """)
             else:
                 rows_with_anomalies = 0
                 st.success("No anomalies detected ✅")
@@ -354,13 +371,13 @@ if uploaded_file:
         def status_text(value, metric_type="neutral"):
             """
             metric_type options:
-            - "good" : green (improvement, like duplicates/nulls removed)
+            - "good" : green (improvement, like duplicates/nulls fixed)
             - "bad"  : red (problem, like anomalies detected)
             - "neutral" : black (no change)
             """
             if value > 0:
                 if metric_type == "good":
-                    return f"<span style='color:green;'>{abs(value)} removed</span>"
+                    return f"<span style='color:green;'>{abs(value)} fixed</span>"
                 elif metric_type == "bad":
                     return f"<span style='color:red;'>{abs(value)} detected</span>"
                 else:
