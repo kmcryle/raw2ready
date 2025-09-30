@@ -341,7 +341,7 @@ if uploaded_file:
                 Anomalies are values in the dataset that are very different from the rest.
                 They can occur naturally such as rare but valid high values or from errors like incrorrect data entry or wrong units.
                 
-                **How to Handle Anomalies**
+                **How to Handle Anomalies:** <br>
                 These are suggested actions, but the final decision depends on the context of your dataset and your goals:
                 1. Review the flagged rows to understand why they appear unusual.  
                 2. Compare them with reliable references or source data.  
