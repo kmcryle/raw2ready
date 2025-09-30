@@ -337,7 +337,6 @@ if uploaded_file:
                 st.dataframe(anomalies)
                 
                 # Recommendation for Anomalies
-                st.markdown("### Recommendations for Handling Anomalies")
                 st.markdown("""
                 Anomalies are values in the dataset that are very different from the rest.
                 They can occur naturally such as rare but valid high values or from errors like incrorrect data entry or wrong units.
