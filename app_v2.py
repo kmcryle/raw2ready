@@ -78,13 +78,13 @@ def fill_missing(df, method="Fill with N/A"):
         if df_copy[col].isnull().sum() > 0:
             if method == "Drop Rows":
                 df_copy.dropna(inplace=True)
-            elif method == "N/A":
+            elif method == "Fill with N/A":
                 df_copy[col].fillna("N/A", inplace=True)
-            elif method == "Mean" and pd.api.types.is_numeric_dtype(df_copy[col]):
+            elif method == "Fill with Mean" and pd.api.types.is_numeric_dtype(df_copy[col]):
                 df_copy[col].fillna(df_copy[col].mean(), inplace=True)
-            elif method == "Median" and pd.api.types.is_numeric_dtype(df_copy[col]):
+            elif method == "Fill with Median" and pd.api.types.is_numeric_dtype(df_copy[col]):
                 df_copy[col].fillna(df_copy[col].median(), inplace=True)
-            elif method == "Most Frequent":
+            elif method == "Fill by most common":
                 df_copy[col].fillna(df_copy[col].mode()[0], inplace=True)
     return df_copy
 
